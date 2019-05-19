@@ -8,18 +8,18 @@
 
 ## Install aws cli
 ```sh
-pip install awscli --upgrade --user
+$ pip install awscli --upgrade --user
 ```
 
 ## Install terrafrom
 On a mac:
 ```sh
-brew install terraform
+$ brew install terraform
 ```
 
 ## Configure aws cli
 ```sh
-aws configure
+$ aws configure
 AWS Access Key ID [None]: ${your-access-key}
 AWS Secret Access Key [None]: ${your-secret-key}
 Default region name [None]: ap-northeast-2
@@ -29,14 +29,14 @@ Default output format [None]: json
 ## How to run
 ### initialize
 ```sh
-terraform init
+$ terraform init
 ```
 ### confirm plan
 ```sh
-terraform plan
+$ terraform plan
 ```
 
 ### run
 ```sh
-terraform apply -var db_password=${PASSWORD} -var version=${VERSION}
+$ terraform apply -var db_password=${PASSWORD} -var version=${VERSION}
 ```
