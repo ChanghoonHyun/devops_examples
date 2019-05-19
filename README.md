@@ -1,6 +1,6 @@
 # Terraform IaC example
 
-![architecture](./docs/images/architecture.png "architecture")
+![architecture](docs/images/architecture.png "architecture")
 
 ## Requirements
 - aws cli
