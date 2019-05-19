@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  form(action="/add_hike", method="post")
+    table(border="1")
+      tr
+        td Your Name
+        td
+          input(name="hike[NAME]", type="textbox")
+      tr
+        td(colspan="2")
+          input(type="submit", value="Record Hike")
+
+  div
+    h3 Hikes
+    table(border="1")
+      tr
+        td Name
+      each hike in hikes
+        tr
+          td #{hike.NAME}
