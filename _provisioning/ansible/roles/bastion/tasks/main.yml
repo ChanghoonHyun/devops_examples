@@ -1,0 +1,34 @@
+- name: Install packages
+  shell: |
+    yum install -y python36-pip-9.0.3-1.26.amzn1
+    yum install -y git-2.14.6-1.61.amzn1
+    pip-3.6 install --upgrade --user awscli
+
+- name: Set profile_name to aws credentials
+  shell: |
+    mkdir ~/.aws
+    echo {{aws_cli.profile_name}} > ~/.aws/credentials
+    echo aws_access_key_id = {{aws_cli.aws_access_key_id}} >> ~/.aws/credentials
+    echo aws_secret_access_key = {{aws_cli.aws_secret_access_key}} >> ~/.aws/credentials
+    echo {{aws_cli.profile_name}} > ~/.aws/config
+    echo output = {{aws_cli.output}} >> ~/.aws/config
+    echo region = {{aws_cli.default_region}} >> ~/.aws/config
+
+- name: Install terraform
+  shell: |
+    curl -O https://releases.hashicorp.com/terraform/{{terraform.version}}/terraform_{{terraform.version}}_linux_amd64.zip
+    unzip terraform_{{terraform.version}}_linux_amd64.zip -d /usr/bin/
+
+- name: Clone project
+  shell:
+    chdir: /opt
+    cmd: git clone https://github.com/ChanghoonHyun/terraform_iac_example.git
+
+- name: Init terraform
+  shell:
+    chdir: /opt/terraform_iac_example
+    cmd: |
+      aws s3 mb s3://{{phase}}-{{terraform.backend_bucket_name}}
+      sed -i s/%%region%%/{{aws_cli.default_region}}/g backend.tf
+      sed -i s/%%phase%%/{{phase}}/g backend.tf
+      sed -i s/%%backend_bucket_name%%/{{terraform.backend_bucket_name}}/g backend.tf

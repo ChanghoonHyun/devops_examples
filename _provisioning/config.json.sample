@@ -1,0 +1,48 @@
+{
+  "vagrant": {
+    "name": "iac_example",
+    "box": "hbsmith/awslinux",
+    "cpu": "1",
+    "memory": "256",
+    "ip": "192.168.36.9"
+  },
+  "common_tasks": {
+    "copy_files": {
+      "rc.local": {
+        "dest": "/etc/rc.d/rc.local",
+        "mode": 755,
+        "backup": "yes"
+      }
+    }
+  },
+  "ssh": {
+    "copy_files": {
+      "rsa/id_rsa.pub": {
+        "dest": "/root/.ssh/",
+        "mode": 600,
+        "backup": "yes"
+      },
+      "ssh/sshd_config": {
+        "dest": "/etc/ssh/sshd_config",
+        "mode": 600,
+        "backup": "yes"
+      }
+    },
+    "authorized_keys": [
+      "rsa/id_rsa.pub"
+    ]
+  },
+  "bastion": {
+    "aws_cli": {
+      "profile_name": "[default]",
+      "aws_access_key_id": "...",
+      "aws_secret_access_key": "...",
+      "default_region": "ap-northeast-2",
+      "output": "json"
+    },
+    "phase": "dv",
+    "terraform": {
+      "backend-bucket-name": "chhyun-terraform-state-bucket"
+    }
+  }
+}
