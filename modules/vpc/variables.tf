@@ -1,59 +1,37 @@
 variable "service_name" {
   description = "prefix for resource name, tag"
-  default     = "sample"
+  default = "sample"
 }
 
-variable "vpc_cidr" {
+variable "web_vpc_cidr" {
   description = "cidr of vpc"
-  default     = "10.0.0.0/16"
 }
 
-variable "public_subnets" {
+variable "db_vpc_cidr" {
+  description = "cidr of vpc"
+}
+
+variable "web_vpc_public_subnets" {
   description = "cidr of public subnets"
-  type        = "list"
-
-  default = [
-    "10.0.0.0/24",
-    "10.0.1.0/24",
-  ]
+  type = list(string)
 }
 
-variable "private_web_subnets" {
+variable "web_vpc_private_web_subnets" {
   description = "cidr of private subnets"
-  type        = "list"
-
-  default = [
-    "10.0.2.0/24",
-    "10.0.3.0/24",
-  ]
+  type = list(string)
 }
 
-variable "private_app_subnets" {
+variable "web_vpc_privte_app_subnets" {
   description = "cidr of private subnets"
-  type        = "list"
-
-  default = [
-    "10.0.4.0/24",
-    "10.0.5.0/24",
-  ]
+  type = list(string)
 }
 
-variable "private_db_subnets" {
+variable "db_vpc_private_subnets" {
   description = "cidr of private subnets"
-  type        = "list"
-
-  default = [
-    "10.0.6.0/24",
-    "10.0.7.0/24",
-  ]
+  type = list(string)
 }
 
 variable "azs" {
   description = "using availability zones"
-  type        = "list"
-
-  default = [
-    "ap-northeast-2a",
-    "ap-northeast-2c",
-  ]
+  type = list(string)
 }

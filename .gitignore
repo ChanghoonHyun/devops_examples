@@ -2,4 +2,7 @@
 .terraform*
 terraform.tfstate*
 .env
-*.zip
+config.json
+rc.local
+id_rsa.pub
+sshd_config
