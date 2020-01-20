@@ -33,3 +33,5 @@ $ terraform plan
 ```sh
 $ terraform apply
 ```
+
+## [성능 최적화 경험 정리](docs/optimization.md)
