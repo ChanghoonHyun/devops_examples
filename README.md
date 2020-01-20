@@ -15,7 +15,7 @@
 ```sh
 $ cp _provisioning/config.json.sample _provisioning/config.json
 $ cp _provisioning/ansible/roles/common_tasks/files/rc.local.sample _provisioning/ansible/roles/common_tasks/files/rc.local
-$ cp {rsa_public_key} cp _provisioning/ansible/roles/ssh/files/rsa/id_rsa.pub
+$ cp {rsa_public_key} _provisioning/ansible/roles/ssh/files/rsa/id_rsa.pub
 $ cp _provisioning/ansible/roles/ssh/files/ssh/sshd_config.sample _provisioning/ansible/roles/ssh/files/ssh/sshd_config
 ```
 
