@@ -11,24 +11,24 @@ module "vpc" {
 }
 
 resource "aws_db_parameter_group" "aurora_db_56_parameter_group" {
-  name = "aurora-db-56-parameter-group"
-  family = "aurora5.6"
-  description = "aurora-db-56-parameter-group"
+  name = var.aws_db_parameter_group_name
+  family = var.aws_db_parameter_group_family
+  description = var.aws_db_parameter_group_description
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_56_cluster_parameter_group" {
-  name = "aurora-56-cluster-parameter-group"
-  family = "aurora5.6"
-  description = "aurora-56-cluster-parameter-group"
+  name = var.aws_rds_cluster_parameter_group_name
+  family = var.aws_rds_cluster_parameter_group_family
+  description = var.aws_rds_cluster_parameter_group_description
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
@@ -49,7 +49,7 @@ module "db" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
@@ -58,7 +58,7 @@ module "redis" {
   source = "git::https://github.com/cloudposse/terraform-aws-elasticache-redis.git?ref=tags/0.14.0"
   availability_zones = var.azs
   namespace = var.service_name
-  stage = "dev"
+  stage = var.stage
   name = "${var.service_name}-redis"
   vpc_id = module.vpc.db_vpc_id
   subnets = module.vpc.db_vpc_private_db_subnet_ids
@@ -73,7 +73,7 @@ module "redis" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
@@ -84,27 +84,26 @@ resource "aws_s3_bucket" "eb_bucket" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
 module "eb_app" {
   source = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.3.0"
-  description = "Test elastic_beanstalk_application"
+  description = "elastic_beanstalk_application"
   namespace = var.service_name
-  stage = "dev"
+  stage = var.stage
   name = var.service_name
   delimiter = "-"
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
-
 resource "aws_s3_bucket_object" "source_bucket" {
-  source = "sample_apps/sample.zip"
+  source = var.eb_source_s3_object
   bucket = aws_s3_bucket.eb_bucket.id
   key = "${var.service_name}/sample.zip"
 }
@@ -119,7 +118,7 @@ resource "aws_elastic_beanstalk_application_version" "version" {
 module "eb_app_server_env" {
   source = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment.git?ref=tags/0.17.0"
   namespace = var.service_name
-  stage = "dev"
+  stage = var.stage
   name = "${var.service_name}-app"
   delimiter = "-"
   description = "server elastic_beanstalk_environment"
@@ -166,14 +165,14 @@ module "eb_app_server_env" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
 }
 
 module "eb_app_web_env" {
   source = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment.git?ref=tags/0.17.0"
   namespace = var.service_name
-  stage = "dev"
+  stage = var.stage
   name = "${var.service_name}-web"
   delimiter = "-"
   description = "server elastic_beanstalk_environment"
@@ -217,6 +216,53 @@ module "eb_app_web_env" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.stage
   }
+}
+
+resource "aws_dynamodb_table" "basic_dynamodb" {
+  name = var.service_name
+  billing_mode = "PROVISIONED"
+  read_capacity = 1
+  write_capacity = 1
+  hash_key = "UserId"
+  range_key = "GameTitle"
+
+  attribute {
+    name = "UserId"
+    type = "S"
+  }
+
+  attribute {
+    name = "GameTitle"
+    type = "S"
+  }
+
+  tags = {
+    Terraform = "true"
+    Environment = var.stage
+  }
+}
+
+resource "aws_sqs_queue" "queue" {
+  name = var.service_name
+  delay_seconds = var.sqs_delay_seconds
+  max_message_size = var.sqs_max_message_size
+  message_retention_seconds = var.sqs_message_retention_seconds
+  receive_wait_time_seconds = var.sqs_receive_wait_time_seconds
+
+  tags = {
+    Terraform = "true"
+    Environment = var.stage
+  }
+}
+
+module "lambda" {
+  source = "./modules/lambda"
+
+  function_name = var.function_name
+  handler = var.handler
+  runtime = var.runtime
+  source_file = var.source_file
+  output_path = var.output_path
 }

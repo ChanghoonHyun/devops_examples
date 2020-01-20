@@ -1,32 +1,25 @@
 # Terraform IaC example
 
+## Architecture
 ![architecture](docs/images/architecture.png "architecture")
 
+## CI/CD pipeline
+![pipeline](docs/images/CI_CD_pipeline.png "pipeline")
+
 ## Requirements
-- aws cli
-- terraform
+- Virtualbox
+- Vagrant
 
-## Install aws cli
+## Set for vagrant
+### copy files, fill in contents
 ```sh
-$ pip install awscli --upgrade --user
+$ cp _provisioning/config.json.sample _provisioning/config.json
+$ cp _provisioning/ansible/roles/common_tasks/files/rc.local.sample _provisioning/ansible/roles/common_tasks/files/rc.local
+$ cp {rsa_public_key} cp _provisioning/ansible/roles/ssh/files/rsa/id_rsa.pub
+$ cp _provisioning/ansible/roles/ssh/files/ssh/sshd_config.sample _provisioning/ansible/roles/ssh/files/ssh/sshd_config
 ```
 
-## Install terrafrom
-On a mac:
-```sh
-$ brew install terraform
-```
-
-## Configure aws cli
-```sh
-$ aws configure
-AWS Access Key ID [None]: ${your-access-key}
-AWS Secret Access Key [None]: ${your-secret-key}
-Default region name [None]: ap-northeast-2
-Default output format [None]: json
-```
-
-## How to run
+## Run terraform
 ### initialize
 ```sh
 $ terraform init
@@ -38,5 +31,5 @@ $ terraform plan
 
 ### run
 ```sh
-$ terraform apply -var db_password=${PASSWORD} -var version=${VERSION}
+$ terraform apply
 ```
