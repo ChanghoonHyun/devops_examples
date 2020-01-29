@@ -1,7 +1,7 @@
 # 성능 최적화 정리
 ## 경험해본 것
 - 분산 환경 서버 구축
-- DB의 Writer, Reader 분산을
+- DB의 Writer, Reader 분산
 - Cache와 DB 분리
 - slow query 튜닝(sql, table 분리 등)
 - Disk I/O를 줄이기 위해 불필요한 log 끄기
